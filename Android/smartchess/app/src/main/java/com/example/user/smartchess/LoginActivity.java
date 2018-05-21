@@ -185,14 +185,14 @@ public class LoginActivity extends AppCompatActivity{
             JSONObject jsonObject = new JSONObject(sb.toString());
             Log.i("Insert Log", jsonObject.getString("result"));
 
-            String insert_result = jsonObject.getString("result");
+            String insert_result = jsonObject.getString("result");      // 서버에서 반환받을 값
 
             final String mnum = jsonObject.getString("num");
             final String nikname = jsonObject.getString("nikname");
             final String win = jsonObject.getString("win");
             final String lose = jsonObject.getString("lose");
 
-            SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);        // 로그인할때 DB와 연결해서 받아온 정보를 SharedPreferences를 이용해서 저장해두고 다른 액티비티에서 불러 사용함
             // sharedPreferences 로 값 저장
             SharedPreferences.Editor editor = pref.edit();
             editor.putString("mnum", mnum);
@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity{
                         startActivity(intent);
                     }
                 });
-            }
+            }   // 로그인 성공
             else {
                 mHandler.post(new Runnable() {
                     @Override
@@ -220,7 +220,7 @@ public class LoginActivity extends AppCompatActivity{
                         Toast.makeText(LoginActivity.this.getApplicationContext(),"정보를 다시 확인해주세요.",Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
+            }   // 로그인 실패
 
         } catch (ClientProtocolException ex) {
             Log.e("Insert Log", ex.toString());
