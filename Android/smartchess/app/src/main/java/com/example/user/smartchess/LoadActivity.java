@@ -29,7 +29,7 @@ public class LoadActivity extends AppCompatActivity {
         Log.i("testLog","LoadActivity,onStart()");
 
 
-        final long startTime = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();      // 시간 처리용 메소드
 
         timerTask = new TimerTask() {
             @Override
@@ -46,7 +46,7 @@ public class LoadActivity extends AppCompatActivity {
 
                         }
                     }
-                });
+                });     // 로딩화면 2초간 지속 후 Login 액티비티 실행
 
             }
         };

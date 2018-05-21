@@ -12,6 +12,7 @@
         android:id="@+id/swipe_layout">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="368dp"
             android:layout_height="215dp"
             tools:layout_editor_absoluteX="8dp"

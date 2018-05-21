@@ -52,7 +52,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     String title;
     Intent intent;
 
-    private long lastPressed;
+    private long lastPressed;       // Backpress 2회누름 종료
 
     private ArrayList<String> rtitle;
     private static final int LAYOUT = R.layout.activity_room;
@@ -64,21 +64,21 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = DataBindingUtil.setContentView(this, LAYOUT);
+        mainBinding = DataBindingUtil.setContentView(this, LAYOUT); // 데이터바인딩 room
 
         intent = getIntent();
         mnum1 = intent.getStringExtra("mnum"); //이전 activity에서 mnum받아옴
 
-        class Thread1 extends Thread {
+        class r_Thread extends Thread {
             @Override
             public void run() {
                 getroomlist();
             }
         }
 
-        Thread1 t1 = new Thread1();
+        r_Thread t1 = new r_Thread();
 
-        t1.setPriority(1);
+        t1.setPriority(1);      // 스레드 우선순위
         t1.start();
 
         btn_score = (Button) findViewById(R.id.btn_score);
@@ -89,7 +89,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
 
-                SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
+                SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);        // SharedPreferences 로 전적 받아오기
                 player = pref.getString("player", "null");
                 lose = pref.getString("lose", "null");  // 현재 자신의 패 전적
                 win = pref.getString("win", "null");  // 현재 자신의 승 전적
@@ -103,7 +103,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                                 dialog.cancel();
                             }
-                        });
+                        });     // 전적창
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -220,9 +220,9 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                     int length = jsonArray.length() - 1;
                     if (length>0) {
-                        frnum = rnumcheck.get(length);
+                        frnum = rnumcheck.get(length);              // 현재 리스트에 있는 방 갯수 체크
                     }else{
-                        frnum = "0";
+                        frnum = "0";                    // 없으면 0 표시
                     }
 
                     Log.i("jsonArray.length()", "" + jsonArray.length());
@@ -287,7 +287,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
         Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
         lastPressed = System.currentTimeMillis();
-    }
+    }   // 백프레스 2회시 종료
 
     private void setRecyclerView() {
         Log.i("RoomActivity", "setRecyclerView().....");
