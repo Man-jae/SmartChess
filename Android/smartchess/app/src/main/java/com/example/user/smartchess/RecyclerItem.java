@@ -1,4 +1,4 @@
-package com.naver.naverspeech.client;
+package com.example.user.smartchess;
 
 /**
  * Created by charlie on 2017. 4. 24..

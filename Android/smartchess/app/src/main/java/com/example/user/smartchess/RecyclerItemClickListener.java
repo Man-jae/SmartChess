@@ -1,4 +1,4 @@
-package com.naver.naverspeech.client;
+package com.example.user.smartchess;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

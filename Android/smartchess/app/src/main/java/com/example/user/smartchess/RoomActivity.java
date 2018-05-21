@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
+import android.databinding.DataBindingUtil;     // gradle app 부분 추가
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.naver.naverspeech.client.databinding.ActivityMain2Binding;
+import com.example.user.smartchess.databinding.ActivityRoomBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,8 +55,8 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     private long lastPressed;
 
     private ArrayList<String> rtitle;
-    private static final int LAYOUT = R.layout.activity_main2;
-    private ActivityMain2Binding mainBinding;
+    private static final int LAYOUT = R.layout.activity_room;
+    private ActivityRoomBinding mainBinding;
     private RecyclerView.Adapter adapter;
 
     private ArrayList<RecyclerItem> mItems = new ArrayList<>();

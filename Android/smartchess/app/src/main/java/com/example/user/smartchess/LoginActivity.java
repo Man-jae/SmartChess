@@ -36,7 +36,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 
-
 public class LoginActivity extends AppCompatActivity{
 
     String TAG = "LoginActivity";
@@ -129,7 +128,7 @@ public class LoginActivity extends AppCompatActivity{
         }
         Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
         lastPressed = System.currentTimeMillis();
-    }
+    }       // backpress 두번 눌리면 앱 종료
 
     private void doProcess(){
 
