@@ -42,7 +42,7 @@ public class LoadActivity extends AppCompatActivity {
                         long endTime = System.currentTimeMillis();
                         Log.i("timerTask", "endTime-startTime.." + (endTime-startTime));
                         if(endTime-startTime>=2000){
-                            startActivity(new Intent(getApplicationContext(),LoginActivity.class));
+                            startActivity(new Intent(getApplicationContext(),LoginActivity.class));     // 로그인 액티비티로
 
                         }
                     }

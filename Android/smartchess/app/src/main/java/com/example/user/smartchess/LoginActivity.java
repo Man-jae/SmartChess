@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
@@ -38,12 +37,10 @@ import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity{
 
-    String TAG = "LoginActivity";
     static EditText etId;
     EditText etPassword;
     String stEmail;
     String stPassword;
-    ProgressBar pbLogin;
     Handler mHandler;
     Button btnCancel;
 
@@ -54,21 +51,20 @@ public class LoginActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etId = (EditText)findViewById(R.id.etId);
-        etPassword = (EditText)findViewById(R.id.etPassword);
-        pbLogin = (ProgressBar)findViewById(R.id.pbLogin);
+        etId = (EditText)findViewById(R.id.etId);                       // 아이디입력창
+        etPassword = (EditText)findViewById(R.id.etPassword);       // 비밀번호입력창
 
         mHandler = new Handler();
 
-        Button btnRegister = (Button)findViewById(R.id.btnRegister);
-        Button btnLogin = (Button)findViewById(R.id.btnLogin);
-        btnCancel = (Button)findViewById(R.id.btnCancel) ;
+        Button btnRegister = (Button)findViewById(R.id.btnRegister);    // 회원가입버튼
+        Button btnLogin = (Button)findViewById(R.id.btnLogin);          // 로그인버튼
+        btnCancel = (Button)findViewById(R.id.btnCancel) ;              // 취소 (앱종료)버튼
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("btnLog","btn_Register");
-                Intent intent = new Intent(getApplicationContext(),RegisterActivity.class);
+                Intent intent = new Intent(getApplicationContext(),RegisterActivity.class);     // 회원가입 액티비티로
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
@@ -81,15 +77,15 @@ public class LoginActivity extends AppCompatActivity{
 
                 stEmail = etId.getText().toString();
                 stPassword = etPassword.getText().toString();
-                if(stEmail.isEmpty() || stEmail.equals("") || stPassword.isEmpty() || stPassword.equals("")){
+                if(stEmail.isEmpty() || stEmail.equals("") || stPassword.isEmpty() || stPassword.equals("")){       // 아이디, 비밀번호 공백 여부 확인
                     Toast.makeText(LoginActivity.this, "입력이 필요합니다.",Toast.LENGTH_SHORT).show();
                 }
 
                 else {
-                    new Thread() {              // 스레드 사용.
+                    new Thread() {
                         @Override
                         public void run() {
-                            doProcess();        // doProcess 함수 호출
+                            doProcess();        // DB에 저장된 아이디,패스워드 비교 함수 호출
                         }
                     }.start();
                 }
@@ -103,7 +99,7 @@ public class LoginActivity extends AppCompatActivity{
 
                 Log.i("btnLog","btnCancel");
 
-                moveTaskToBack(true);
+                moveTaskToBack(true);       //현재 실행중인 어플리케이션 백그라운드 전환
 
             }
         });
@@ -138,13 +134,13 @@ public class LoginActivity extends AppCompatActivity{
         String id = etId.getText().toString();
         String pw = etPassword.getText().toString();
 
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/selectlogin.do");      // DB JSON 주소
+        HttpClient client = new DefaultHttpClient();        // http client 라이브러리 사용
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/selectlogin.do");      // id, pass 확인
 
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
         try {
-            nameValues.add(new BasicNameValuePair("mid", URLDecoder.decode(id, "UTF-8")));
+            nameValues.add(new BasicNameValuePair("mid", URLDecoder.decode(id, "UTF-8")));      // 필드에 입력된 id, pw 값 nameValues에 저장해서 post
             nameValues.add(new BasicNameValuePair("mpw", URLDecoder.decode(pw, "UTF-8")));
 
             post.setEntity(new UrlEncodedFormEntity(nameValues, "UTF-8"));
@@ -173,7 +169,7 @@ public class LoginActivity extends AppCompatActivity{
             }else{
                 is = response.getEntity().getContent();
             }
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuffer sb = new StringBuffer();
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -195,18 +191,18 @@ public class LoginActivity extends AppCompatActivity{
             SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);        // 로그인할때 DB와 연결해서 받아온 정보를 SharedPreferences를 이용해서 저장해두고 다른 액티비티에서 불러 사용함
             // sharedPreferences 로 값 저장
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString("mnum", mnum);
-            editor.putString("player", nikname);
-            editor.putString("win",win);
-            editor.putString("lose", lose);
+            editor.putString("mnum", mnum);             // 유저 번호
+            editor.putString("player", nikname);        // 유저 닉네임
+            editor.putString("win",win);                // 유저 승 횟수
+            editor.putString("lose", lose);             // 유저 패 횟수
             editor.commit();
 
-            if(insert_result.equals("good")){
+            if(insert_result.equals("good")){       // id,pw 일치 -> 서버에서 good 리턴
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(LoginActivity.this.getApplicationContext(),"반갑습니다",Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(),RoomActivity.class);
+                        Intent intent = new Intent(getApplicationContext(),RoomActivity.class);     // room 액티비티로
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("mnum", mnum);
                         startActivity(intent);

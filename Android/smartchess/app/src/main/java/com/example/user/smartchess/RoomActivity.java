@@ -67,7 +67,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         mainBinding = DataBindingUtil.setContentView(this, LAYOUT); // 데이터바인딩 room
 
         intent = getIntent();
-        mnum1 = intent.getStringExtra("mnum"); //이전 activity에서 mnum받아옴
+        mnum1 = intent.getStringExtra("mnum"); //이전 activity에서 mnum1받아옴
 
         class r_Thread extends Thread {
             @Override
@@ -202,7 +202,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                         mnum2 = jsonObject.getString("mnum2");
                         Log.i("RoomActivity", "mnum2s" + mnum2);
 
-                        roominfo.add(rnum + "split" + mnum1 + "split" + mnum2 + "split" + port + "split" + title);
+                        roominfo.add(rnum + "split" + mnum1 + "split" + mnum2 + "split" + port + "split" + title);      // 방 정보
                         roomcheck.add(mnum2);
                         rnumcheck.add(rnum);
                         rport.add(port);
@@ -239,7 +239,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             listHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    setRecyclerView();
+                    setRecyclerView();      //리사이클러뷰 호출
                 }
             });setRefresh();
 
@@ -309,12 +309,12 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                     public void onItemClick(View view, int position) {
 
 
-                        if (roomcheck.get(position).toString() == "null") {
+                        if (roomcheck.get(position).toString() == "null") {     // 두번째 플레이어 정보가 없을 경우 == 첫번째 플레이어만 방에 있음
                             Toast.makeText(getApplicationContext(), "즐거운 게임!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), GointoRoom.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             Log.i("asdasd=== ", rport.get(position));
-                            intent.putExtra("roominfo", roominfo.get(position));
+                            intent.putExtra("roominfo", roominfo.get(position));    // goingtoroom 으로 방정보, 포트, 타이틀 intent
                             intent.putExtra("port", rport.get(position));
                             intent.putExtra("title", rtitle.get(position));
 
@@ -322,12 +322,12 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                             SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);    // sharedPreferences 로 값 저장
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("my_port", rport.get(position));
-                            editor.putString("mnum1",rmum1.get(position).toString());
+                            editor.putString("my_port", rport.get(position));       // 방 포트 번호
+                            editor.putString("mnum1",rmum1.get(position).toString());   // 방 번호
                             editor.commit();
 
                             startActivity(intent);
-                        } else {
+                        } else {        // 플레이어 1,2 모두 접속 완료
                             Toast.makeText(getApplicationContext(), "입장이 완료된 방입니다.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -336,7 +336,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    private void setRefresh() {
+    private void setRefresh() {     // 위에서 아래로 스와이프 -> 리프레시
         mainBinding.swipeRefreshLo.setOnRefreshListener(this);
         mainBinding.swipeRefreshLo.setColorSchemeColors(getResources().getIntArray(R.array.google_colors));
     }
@@ -351,7 +351,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                     @Override
                     public void run() {
                         getroomlist();
-                    }
+                    }   // 방 리스트를 새로 받아옴
                 }
                 Thread2 t2 = new Thread2();
                 t2.start();
@@ -367,7 +367,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         // RecyclerView 에 들어갈 데이터를 추가합니다.
         Log.i("rtitle",rtitle.toString());
         for (String name : rtitle) {
-            mItems.add(new RecyclerItem(name));
+            mItems.add(new RecyclerItem(name));     //RecyclerItem에 room 타이틀 add
         }
         adapter.notifyDataSetChanged();
     }

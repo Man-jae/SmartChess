@@ -44,28 +44,28 @@ public class GointoRoom extends Activity{
 
     protected void onCreate(Bundle save) {
         super.onCreate(save);
-        setContentView(R.layout.activity_gointoroom);
+        setContentView(R.layout.activity_gointoroom);       // 뷰와 코드 연결
 
-        intent = getIntent();
-        mnum = intent.getStringExtra("mnum");
+        intent = getIntent();       // 인텐트 받기
+        mnum = intent.getStringExtra("mnum");       // 유저 번호, 포트, 타이틀 받기
         port = intent.getStringExtra("port");
         title = intent.getStringExtra("title");
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        mnum1 = pref.getString("mnum1", "null");
+        mnum1 = pref.getString("mnum1", "null");        // 방을 만든 유저의 번호
 
-        Log.i("manjaeeee = ", mnum1);
+        Log.i("mnum1 = ", mnum1);
 
-        title_name = (TextView)findViewById(R.id.title_name);
+        title_name = (TextView)findViewById(R.id.title_name);   // 방 타이틀
         title_name.setText(title);
 
         btn = (Button)findViewById(R.id.chat_btn);
-        btn.setOnClickListener(new View.OnClickListener() {
+        btn.setOnClickListener(new View.OnClickListener() {     // 게임 room 입장 버튼
             @Override
             public void onClick(View v) {
 
-                if(mnum1.equals("null")){
-                    new Thread() {              // 스레드 사용.
+                if(mnum1.equals("null")){       // 방만 생성되고 첫번째 플레이어가 입장하지 않은 경우
+                    new Thread() {
                         @Override
                         public void run() {
                             update_mnum1_doProcess();
@@ -78,8 +78,8 @@ public class GointoRoom extends Activity{
                         }
                     }.start();
                 }
-                else {
-                    new Thread() {              // 스레드 사용.
+                else {      // 첫번째 플레이어가 입장한 경우 (내가 두번째 플레이어가 됨)
+                    new Thread() {
                         @Override
                         public void run() {
                             update_mnum2_doProcess();
@@ -102,8 +102,8 @@ public class GointoRoom extends Activity{
     private void update_mnum1_doProcess(){
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        port = pref.getString("my_port", "null");
-        mnum = pref.getString("mnum", "null");
+        port = pref.getString("my_port", "null");       // 내 고유 포트번호
+        mnum = pref.getString("mnum", "null");      // 내 유저 번호
 
         Log.i("portNUM ===== ", port);
         Log.i("mnum ===== ", mnum);
@@ -119,8 +119,8 @@ public class GointoRoom extends Activity{
 
             post.setEntity(new UrlEncodedFormEntity(nameValues, "UTF-8"));
 
-            Log.i("manjae > port == ", port);
-            Log.i("manjae > mnum == ", mnum);
+            Log.i(" > port == ", port);
+            Log.i(" > mnum == ", mnum);
 
 
         } catch (UnsupportedEncodingException ex) {
@@ -170,7 +170,7 @@ public class GointoRoom extends Activity{
             e.printStackTrace();
         }
 
-    }
+    }   // 첫번째 플레이어로 입장
 
     // mnum2 ->>>> update
     private void update_mnum2_doProcess(){
@@ -193,8 +193,8 @@ public class GointoRoom extends Activity{
 
             post.setEntity(new UrlEncodedFormEntity(nameValues, "UTF-8"));
 
-            Log.i("manjae > port == ", port);
-            Log.i("manjae > mnum == ", mnum);
+            Log.i(" > port == ", port);
+            Log.i(" > mnum == ", mnum);
 
 
         } catch (UnsupportedEncodingException ex) {
@@ -244,6 +244,6 @@ public class GointoRoom extends Activity{
             e.printStackTrace();
         }
 
-    }
+    }   // 두번째 플레이어로 입장
 }
 

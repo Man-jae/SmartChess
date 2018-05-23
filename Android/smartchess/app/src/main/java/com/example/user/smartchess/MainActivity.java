@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AbsRuntimePermission {
+public class MainActivity extends AbsRuntimePermission {        // 마이크 권한요청 상속
     final Handler listHandler = new Handler();
 
     private static final int REQUEST_PERMISSION = 10;       // 마이크 권한설정
@@ -171,7 +171,7 @@ public class MainActivity extends AbsRuntimePermission {
             }
         }
 
-        return redefinition;
+        return redefinition;    // 음성인식 값을 원하는 좌표값으로 변환하여 리턴
     }       // 문자 판별 함수
 
 
@@ -190,12 +190,12 @@ public class MainActivity extends AbsRuntimePermission {
                 activity.handleMessage(msg);
             }
         }
-    }
+    }   // 음성인식을 위한 핸들러
 
     // Handle speech recognition Messages.
     private void handleMessage(Message msg) {
         switch (msg.what) {
-            case R.id.clientReady:
+            case R.id.clientReady:      // 음성인식 기능 준비
                 // Now an user can speak.
                 txtResult.setText("Connected");
                 writer = new AudioWriterPCM(
@@ -213,55 +213,49 @@ public class MainActivity extends AbsRuntimePermission {
                 txtResult.setText(mResult);
                 break;
 
-            case R.id.finalResult:
+            case R.id.finalResult:      // 최종 인식 결과
                 SpeechRecognitionResult speechRecognitionResult = (SpeechRecognitionResult) msg.obj;
                 List<String> results = speechRecognitionResult.getResults();
                 StringBuilder strBuf = new StringBuilder();
-                for(String result : results) {
+                for(String result : results) {      // results 에 음성인식 값 append
                     strBuf.append(result);
                     strBuf.append("\n");
                 }
                 mResult = strBuf.toString();
-                txtResult.setText(results.get(0)); // 텍스트뷰에 나오는 단어
+                txtResult.setText(results.get(0)); // 맨 처음 결과 값이 가장 정확한 음성인식 결과값이라 그부분을 사용
 
-                String[] identification_1 = new String[4];
+                String[] identification_1 = new String[4];      // 음성인식 결과값을 현재 x,y 좌표 / 목표 x,y 좌표 값으로 나누어 담기
 
-                identification_1 = results.get(0).split(" ");
+                identification_1 = results.get(0).split(" ");   // 공백으로 spilt
 
-                for(int i=0; i<identification_1.length; i++){
+//                for(int i=0; i<identification_1.length; i++){   Log.i("(identification_1) :", identification_1[i]);  }    // identification_1 값 확인
 
-                    Log.i("(identification_1) :", identification_1[i]);
-
-                }
                 try{
 
-                    aaaa = abc(identification_1);       // 문자 판별 함수
+                    aaaa = abc(identification_1);       // 좌표로 변환
 
                     StringBuilder strBuf2 = new StringBuilder();
 
-                    Log.i("testLog :", "Test : " + aaaa[0]);
-                    Log.i("testLog :", "Test : " + aaaa[1]);
-                    Log.i("testLog :", "Test : " + aaaa[2]);
-                    Log.i("testLog :", "Test : " + aaaa[3]);
-                    Log.i("testLog :", "Test : " + aaaa[4]);
+//                    Log.i("testLog :", "Test : " + aaaa[0]);
+//                    Log.i("testLog :", "Test : " + aaaa[1]);
+//                    Log.i("testLog :", "Test : " + aaaa[2]);
+//                    Log.i("testLog :", "Test : " + aaaa[3]);
+//                    Log.i("testLog :", "Test : " + aaaa[4]);      // 변환값 확인
 
-                    for (String result : aaaa){
+                    for (String result : aaaa){ strBuf2.append(result); }   // 변환값 append
 
-                        strBuf2.append(result);
-
-                    }
-                    finalResult = strBuf2.toString();
+                    finalResult = strBuf2.toString();       // finalResult == 최종 좌표
                     Log.i("finalResult", finalResult);
 
-                    txtfinalResult.setText(finalResult);
+                    txtfinalResult.setText(finalResult);    // 좌표 출력
 
-                    new Thread() {              // 스레드 사용.
+                    new Thread() {
                         @Override
                         public void run() {
-                            coordi_doProcess();
+                            coordi_doProcess();     // 좌표값 DB 저장 함수 실행
                         }
                     }.start();
-                } catch (IndexOutOfBoundsException e) {
+                } catch (IndexOutOfBoundsException e) {     // 좌표값이 제대로 들어오지 않았을때
 
                     Log.i("IndexOut", "오류발생!!!!");
                     Toast.makeText(getApplicationContext(), "제대로 된 입력이 되지않았습니다. (좌표값 없음)", Toast.LENGTH_LONG).show();
@@ -341,7 +335,7 @@ public class MainActivity extends AbsRuntimePermission {
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnBack.setOnClickListener(new View.OnClickListener() {     // 게임화면에서 메인화면으로 돌아가는 버튼
             @Override
             public void onClick(View v) {
 
@@ -397,19 +391,20 @@ public class MainActivity extends AbsRuntimePermission {
             public void run() {
                 check_del();
             }
-        }.start();
+        }.start();      // 뒤로가기 버튼과 같은 기능
 
     } // 뒤로가기 기권
 
     /////////////////// 함수 모음 /////////////////
 
+    // check_del 게임화면-> 메인화면으로 돌아갈 때 실행되는 함수
     private void check_del(){
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        port = pref.getString("my_port", "null");
+        port = pref.getString("my_port", "null");       // 방 포트 번호
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/APortSelectOne.do");      // DB JSON 주소
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/APortSelectOne.do");      // DB에서 해당 방 포트번호 확인
 
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
@@ -461,7 +456,7 @@ public class MainActivity extends AbsRuntimePermission {
         } catch (JSONException e) {
 
             jsonEx = 1;
-            emptyport = "null";
+            emptyport = "null";     // 방이 존재하는지 확인
 
 
             e.printStackTrace();
@@ -469,7 +464,7 @@ public class MainActivity extends AbsRuntimePermission {
 
         if(jsonEx == 0){ emptyport = "1"; }
 
-        if(emptyport == "null"){
+        if(emptyport == "null"){    // 방이 없을 경우 -> 게임이 끝나서 해당 포트 사라짐
             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
             // 알림창의 속성 설정
@@ -483,7 +478,7 @@ public class MainActivity extends AbsRuntimePermission {
                             new Thread() {              // 스레드 사용.
                                 @Override
                                 public void run() {
-                                    update_win_score();
+                                    update_win_score();     // 게임승리 -> 게임 패배 케이스 없음
                                 }
                             }.start();
 
@@ -505,7 +500,7 @@ public class MainActivity extends AbsRuntimePermission {
                 }
             });
         }
-        else {
+        else {      // 방이 있을 경우 -> 게임이 끝나지 않은 상태라 기권 여부 표시
             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 
             // 알림창의 속성 설정
@@ -515,17 +510,17 @@ public class MainActivity extends AbsRuntimePermission {
                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
 
-                            new Thread() {              // 스레드 사용.
+                            new Thread() {
                                 @Override
                                 public void run() {
-                                    delete_gameroom();
+                                    delete_gameroom();      // 게임에서 기권했기 때문에 방 정보 삭제 함수 실행
                                 }
                             }.start();
 
-                            new Thread() {              // 스레드 사용.
+                            new Thread() {
                                 @Override
                                 public void run() {
-                                    update_lose_score();
+                                    update_lose_score();       // 게임패배
                                 }
                             }.start();
 
@@ -548,13 +543,13 @@ public class MainActivity extends AbsRuntimePermission {
         }
     }
 
-    private void delete_gameroom(){
+    private void delete_gameroom(){     // 방 삭제
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
         port = pref.getString("my_port", "null");
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/roomdelete.do");      // DB JSON 주소
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/roomdelete.do");      // 방 삭제
 
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
@@ -611,8 +606,9 @@ public class MainActivity extends AbsRuntimePermission {
         }
 
 
-    }// 게임이 끝났을 때
+    }
 
+    // 좌표값 저장
     private void coordi_doProcess(){
 
         final String text_starta = aaaa[0];     // 음성인식 좌표값
@@ -682,7 +678,7 @@ public class MainActivity extends AbsRuntimePermission {
             } catch (JSONException ex) {
                 Log.e("Insert Log", ex.toString());
             }
-        }catch (NullPointerException e){
+        }catch (NullPointerException e){        // 좌표에 null 값이 있으면 toast 실행
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -691,8 +687,9 @@ public class MainActivity extends AbsRuntimePermission {
             });
 
         }
-    }       // 좌표값 DB 저장 함수
+    } // 좌표값 DB 저장 함수
 
+    // 라즈베리파이에서 게임 room 서버생성
     private boolean testServer() {
         try {
             s = new Socket(hostv,portv);
@@ -705,6 +702,8 @@ public class MainActivity extends AbsRuntimePermission {
         }
     }
 
+
+    // 게임 승리 시 win+1
     private void update_win_score(){
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -719,7 +718,7 @@ public class MainActivity extends AbsRuntimePermission {
         Log.i("lose ===== ", lose);
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/scoreupdateOK.do");      // DB JSON 주소
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/scoreupdateOK.do");      // win 값을 +1 후에 update
 
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
@@ -769,7 +768,7 @@ public class MainActivity extends AbsRuntimePermission {
 
             String insert_result = jsonObject.getString("result");
 
-            SharedPreferences.Editor editor = pref.edit();
+            SharedPreferences.Editor editor = pref.edit();      // 승,패 정보 업데이트
             editor.putString("win",win);
             editor.putString("lose", lose);
             editor.commit();
@@ -785,6 +784,7 @@ public class MainActivity extends AbsRuntimePermission {
 
     }       // '승' 함수
 
+    // 패배시 lose +1
     private void update_lose_score(){
 
         SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
@@ -799,8 +799,7 @@ public class MainActivity extends AbsRuntimePermission {
         Log.i("lose ===== ", lose);
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/scoreupdateOK.do");      // DB JSON 주소
-
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/scoreupdateOK.do");      // lose+1
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
         try {

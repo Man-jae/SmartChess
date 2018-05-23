@@ -21,6 +21,10 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -33,5 +37,8 @@ dependencies {
     // apache http client
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-v4:23.4.0'
+    implementation 'com.android.support:support-v4:27.1.1'
+
+    implementation 'com.naver.speech.clientapi:naverspeech-sdk-android:1.1.1'
+
 }

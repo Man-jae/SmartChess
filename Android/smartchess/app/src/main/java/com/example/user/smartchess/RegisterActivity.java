@@ -36,15 +36,10 @@ import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    String TAG = "LoginActivity";
     EditText etName;
     EditText etId;
     EditText etPassword;
     Button btnRegister;
-    String stName;
-    String stId;
-    String stPassword;
-    ProgressBar pbLogin;
     Handler mHandler;
 
     @Override
@@ -52,22 +47,21 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mHandler = new Handler();
-        etName = (EditText)findViewById(R.id.etName);
-        etId = (EditText)findViewById(R.id.etId);
-        etPassword = (EditText)findViewById(R.id.etPassword);
-        pbLogin = (ProgressBar)findViewById(R.id.pbLogin);
+        etName = (EditText)findViewById(R.id.etName);                   // 이름 입력필드
+        etId = (EditText)findViewById(R.id.etId);                       // id 입력필드
+        etPassword = (EditText)findViewById(R.id.etPassword);           // pw 입력필드
 
-        btnRegister = (Button)findViewById(R.id.btnRegister);
-        Button btnCancel = (Button)findViewById(R.id.btnCancel);
+        btnRegister = (Button)findViewById(R.id.btnRegister);           // 회원가입 버튼
+        Button btnCancel = (Button)findViewById(R.id.btnCancel);            // 뒤로가기버튼
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                new Thread() {              // 스레드 사용.
+                new Thread() {
                     @Override
                     public void run() {
-                        doProcess();        // doProcess 함수 호출
+                        doProcess();        // 회원가입 조건 판별 함수 호출
                     }
                 }.start();
 
@@ -79,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Log.i("btnLog","btn_Register");
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);    // 로그인화면으로
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
 
@@ -96,6 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStop();
     }
 
+
     private void doProcess(){
 
         etName = (EditText)findViewById(R.id.etName);
@@ -107,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
         String pw = etPassword.getText().toString();
 
         HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/insertRegister.do");      // DB JSON 주소
+        HttpPost post = new HttpPost("http://192.168.0.113:8080/Chess/insertRegister.do");      // 입력정보 DB insert
 
         ArrayList<NameValuePair> nameValues = new ArrayList<NameValuePair>();
 
@@ -147,7 +142,6 @@ public class RegisterActivity extends AppCompatActivity {
             StringBuffer sb = new StringBuffer();
             String line = "";
             while ((line = br.readLine()) != null) {
-                //Log.i("Insert Log", "while>>>>>"+line);
                 sb.append(line);
             }
 
@@ -158,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             String insert_result = jsonObject.getString("result");
 
-            if(insert_result.equals("insertgood")){
+            if(insert_result.equals("insertgood")){                 // 가입정보 확인 완료
                 Log.i("TEstlog", "insert result");
                 mHandler.post(new Runnable() {
                     @Override
@@ -170,7 +164,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 });
             }
-            else {
+            else {                                      // 동일아이디 존재, 입력값 없을 경우
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
