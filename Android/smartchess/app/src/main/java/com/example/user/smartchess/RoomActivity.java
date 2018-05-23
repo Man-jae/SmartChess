@@ -84,7 +84,9 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         btn_score = (Button) findViewById(R.id.btn_score);
         btn_logout = (Button) findViewById(R.id.btn_logout);
 
-        btn_score.setOnClickListener(new View.OnClickListener() {
+
+        // 전적확인 ================================================================================
+        btn_score.setOnClickListener(new View.OnClickListener() {           // 전적확인 팝업 생성
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(RoomActivity.this);
@@ -103,7 +105,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                                 dialog.cancel();
                             }
-                        });     // 전적창
+                        });
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -111,6 +113,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
+        // 로그아웃 ==================================================
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,6 +146,8 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
     ArrayList<String> rport;
     ArrayList<String> rmum1;
 
+
+    // 방 리스트 불러오는 함수 ================================
     public void getroomlist() {
 
         HttpURLConnection conn = null;
@@ -233,7 +238,6 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
             } else {
                 port = "-";
                 title = "-";
-
             }
 
             listHandler.post(new Runnable() {
@@ -289,6 +293,7 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         lastPressed = System.currentTimeMillis();
     }   // 백프레스 2회시 종료
 
+    // 방 리스트 ============================================================
     private void setRecyclerView() {
         Log.i("RoomActivity", "setRecyclerView().....");
         mainBinding.recyclerView.setHasFixedSize(true);
@@ -304,10 +309,10 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
         mainBinding.recyclerView.addItemDecoration(dividerItemDecoration);
 
         mainBinding.recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), mainBinding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+
+                new RecyclerItemClickListener(getApplicationContext(), mainBinding.recyclerView, new RecyclerItemClickListener.OnItemClickListener() {      // 개설된 게임 방 클릭
                     @Override
                     public void onItemClick(View view, int position) {
-
 
                         if (roomcheck.get(position).toString() == "null") {     // 두번째 플레이어 정보가 없을 경우 == 첫번째 플레이어만 방에 있음
                             Toast.makeText(getApplicationContext(), "즐거운 게임!", Toast.LENGTH_SHORT).show();
@@ -330,6 +335,11 @@ public class RoomActivity extends AppCompatActivity implements SwipeRefreshLayou
                         } else {        // 플레이어 1,2 모두 접속 완료
                             Toast.makeText(getApplicationContext(), "입장이 완료된 방입니다.", Toast.LENGTH_SHORT).show();
                         }
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
                     }
                 })
         );
