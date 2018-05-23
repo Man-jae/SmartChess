@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity{
 
                 stEmail = etId.getText().toString();
                 stPassword = etPassword.getText().toString();
-                if(stEmail.isEmpty() || stEmail.equals("") || stPassword.isEmpty() || stPassword.equals("")){       // 아이디, 비밀번호 공백 여부 확인
+                if(stEmail.trim().isEmpty() || stPassword.trim().isEmpty()){       // 아이디, 비밀번호 공백 여부 확인 (trim으로 수정)
                     Toast.makeText(LoginActivity.this, "입력이 필요합니다.",Toast.LENGTH_SHORT).show();
                 }
 
